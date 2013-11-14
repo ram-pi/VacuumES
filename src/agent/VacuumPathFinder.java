@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jgrapht.**;
+import org.jgrapht.graph.**;
+
 public class VacuumPathFinder {
 
 	private List<A_Point> closedList;
@@ -23,6 +26,51 @@ public class VacuumPathFinder {
 		this.current = new A_Point();
 		this.path = new ArrayList<A_Point>(); 	
 	}
+    
+    public SimpleWeightedGraph<Point, DefaultEdgeWeight> getGraph(LinkedList<Point> dirty, LinkedList<Point> obstacles, Point start, Point base, int size) {
+	
+	SimpleWeightedGraph<Point, DefaultWeightedEdge>  g = new SimpleWeightedGraph<Point, DefaultWeightedEdge>(DefaultWeightedEdge.class); 
+	
+	
+	for (Point p : dirty) 
+	    g.addVertex (p);
+	
+	// o(n^2)
+
+	for (Point curr : dirty) {
+	    for (Point p : dirty) {
+		if (! curr.equals(p)) {
+		    this.astar (curr, p, size, obstacles);
+		    int w = this.getPointPath().size();
+		    DefaultWeightedEdge e = g.addEdge(curr, p); 
+		    graph.setEdgeWeight(e, w); 
+		}
+	    }
+	}
+
+	g.addVertex(start);
+	
+	for (Point p: dirty) {
+	    this.astar (start, p, size, obstacles);
+	    int w = this.getPointPath().size();
+	    DefaultWeightedEdge e = g.addEdge(start, p); 
+	    graph.setEdgeWeight(e, w); 
+	}
+	
+	g.addVertex(base);
+
+	Point dummy = new Point();
+
+	g.addVertex(dummy);
+
+	DefaultWeightedEdge e = g.addEdge(base, dummy); 
+	graph.setEdgeWeight(e, 0); 
+
+	return g;
+		
+
+
+    }
 
 	public void clearLists () {
 		this.getOpenList().clear();

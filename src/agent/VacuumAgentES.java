@@ -17,6 +17,11 @@ import core.LocalVacuumEnvironmentPercept;
 import core.VacuumEnvironment.LocationState;
 import core.VacuumEnvironmentState;
 
+
+
+import org.jgrapht.**;
+import org.jgrapht.graph.**;
+
 public class VacuumAgentES extends AbstractAgent {
 	
 	public java.util.List<Point> dirtyPoints;
@@ -75,6 +80,8 @@ public class VacuumAgentES extends AbstractAgent {
 			finder = new VacuumPathFinder();
 //			finder.astar(agentLocation, dirtyPoints.get(0), 8, obstacles);
 //			path.addAll(finder.getPointPath());
+			SimpleWeightedGraph<Point, DefaultEdgeWeight> g = finder.getGraph(dirtyPoints, obstacles, agentLocation, vep.getBaseLocation(), 8);
+			System.out.println (g);
 			path.addAll(finder.getPathToNN(agentLocation, dirtyPoints, 8, obstacles));
 			finder.printPath(path);
 		}
